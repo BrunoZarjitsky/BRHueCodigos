@@ -152,7 +152,7 @@ void loop() {
   deph2.publish( &depht2);
   
   leak.data = sensores[6];
-  leakS.Publish( &leak);
+  leakS.publish( &leak);
 
   nh.spinOnce();
 }

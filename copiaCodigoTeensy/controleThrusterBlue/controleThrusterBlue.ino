@@ -11,6 +11,10 @@ Servo servo4;
 Servo servo5;
 int signal;
 
+//Motores
+//3;4;5
+//10;9;6
+
 ros::NodeHandle  nh;
 
 void messageCB( const std_msgs::UInt16MultiArray& controle){

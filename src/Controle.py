@@ -22,27 +22,27 @@ def controleThruster():
 
 def pres1CB(data):
     global pressao1
-    pressao1 = str(data.data)
+    pressao1 = "%.2f" %data.data
 
 def pres2CB(data):
     global pressao2
-    pressao2 = str(data.data)
+    pressao2 =  "%.2f" %data.data
 
 def temp1CB(data):
     global temperatura1
-    temperatura1 = str(data.data)
+    temperatura1 =  "%.2f" %data.data
 
 def temp2CB(data):
     global temperatura2
-    temperatura2 = str(data.data)
+    temperatura2 =  "%.2f" %data.data
 
 def deph1CB(data):
     global depht1
-    depht1 = str(data.data)
+    depht1 =  "%.2f" %data.data
 
 def deph2CB(data):
     global depht2
-    depht2 = str(data.data)
+    depht2 =  "%.2f" %data.data
 
 def leakCB(data):
     global leak
@@ -53,37 +53,37 @@ def leakCB(data):
 
 def pegandoData():
     try:
-        rospy.Subscriber("pres1", Float32, pres1CB)
+        rospy.Subscriber("pressao1", Float32, pres1CB)
         pressaoData1["text"] = pressao1
     except:
         pressaoData1["text"] = "---"
     try:
-        rospy.Subscriber("pres2", Float32, pres2CB)
+        rospy.Subscriber("pressao2", Float32, pres2CB)
         pressaoData2["text"] = pressao2
     except:
         pressaoData2["text"] = "---"
     try:
-        rospy.Subscriber("temp1", Float32, temp1CB)
+        rospy.Subscriber("temperatura1", Float32, temp1CB)
         tempData1["text"] = temperatura1
     except:
         tempData1["text"] = "---"
     try:
-        rospy.Subscriber("temp2", Float32, temp2CB)
+        rospy.Subscriber("temperatura2", Float32, temp2CB)
         tempData2["text"] = temperatura2
     except:
         tempData2["text"] = "---"
     try:
-        rospy.Subscriber("deph1", Float32, deph1CB)
+        rospy.Subscriber("depht1", Float32, deph1CB)
         dephtData1["text"] = depht1
     except:
         dephtData1["text"] = "---"
     try:
-        rospy.Subscriber("deph2", Float32, deph2CB)
+        rospy.Subscriber("depht2", Float32, deph2CB)
         dephtData2["text"] = depht2
     except:
         dephtData2["text"] = "---"
     try:
-        rospy.Subscriber("leakS", Float32, leakCB)
+        rospy.Subscriber("leak", Float32, leakCB)
         leakData["text"] = leak
     except:
         leakData["text"] = "---"

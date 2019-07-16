@@ -3,27 +3,31 @@ from pynput.keyboard import Key, KeyCode, Listener
 import rospy
 from std_msgs.msg import UInt16MultiArray
 
-full = 1600
-empt = 1400
+front = 1600
+back = 1400
 
 def on_press(key):
     #print(key)
     if key == KeyCode.from_char("w"):
-        valor.data = [full, 1500, full, full, 1500, full]
+        valor.data = [front, 1500, front, front, 1500, front]
     elif key == KeyCode.from_char("s"):
-        valor.data = [empt, 1500, empt, empt, 1500, empt]
+        valor.data = [back, 1500, back, back, 1500, back]
     if key == KeyCode.from_char("a"):
-        valor.data = [empt, 1500, full, full, 1500, empt]
-    if key == KeyCode.from_char("d"): #Erro
-        valor.data = [full, 1500, empt, full, 1500, empt]
-    if key == KeyCode.from_char("q"): #Erro
-        valor.data = [empt, 1500, full, full, 1500, empt]
-    if key == KeyCode.from_char("e"):
-        valor.data = [full, 1500, empt, empt, 1500, full]
+        valor.data = [back, 1500, front, back, 1500, back]
+    if key == KeyCode.from_char("d"):
+        valor.data = [front, 1500, back, front, 1500, back]
+    if key == KeyCode.from_char("q"): #yaw
+        valor.data = [back, 1500, front, front, 1500, back]
+    if key == KeyCode.from_char("e"): #yaw
+        valor.data = [front, 1500, back, back, 1500, front]
     if key == KeyCode.from_char("z"):
-        valor.data = [1500, empt, 1500, 1500, empt, 1500]
+        valor.data = [1500, back, 1500, 1500, back, 1500]
     if key == KeyCode.from_char("x"):
-        valor.data = [1500, full, 1500, 1500, full, 1500]
+        valor.data = [1500, front, 1500, 1500, front, 1500]
+    if key == KeyCode.from_char("r"): #pitch
+        valor.data = [1500, back, 1500, 1500, front, 1500]
+    if key == KeyCode.from_char("f"): #pitch
+        valor.data = [1500, front, 1500, 1500, front, 1500]
     pub.publish(valor)
 
 def on_release(key):

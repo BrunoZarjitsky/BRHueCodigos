@@ -20,11 +20,11 @@ def thruster1():
     global valor
     valor = UInt16MultiArray()
     valor.data = [1500, 1500, 1500, 1500, 1500, 1500]
-    pub = rospy.Publisher('controleThruster', UInt16MultiArray, queue_size=10)
-    rospy.init_node('controleThruster', anonymous=True)
-    while not rospy.is_shutdown():
-        rospy.Subscriber("thruster", thruster, regra3)
-        pub.publish(valor)
+    pub = rospy.Publisher('mapeadorThruster', UInt16MultiArray, queue_size=10)
+    rospy.init_node('mapeadorThruster', anonymous=True)
+    pub.publish(valor)
+    rospy.Subscriber("thruster", thruster, regra3)
+    rospy.spin()
 
 if __name__ == '__main__':
     try:

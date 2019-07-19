@@ -3,8 +3,8 @@ from pynput.keyboard import Key, KeyCode, Listener
 import rospy
 from std_msgs.msg import UInt16MultiArray
 
-front = 1600
-back = 1400
+front = 1900
+back = 1100
 
 def on_press(key):
     #print(key)
@@ -39,16 +39,7 @@ def on_release(key):
 
 valor = UInt16MultiArray()
 valor.data = [1500, 1500, 1500, 1500, 1500, 1500]
-pub = rospy.Publisher('controleThruster', UInt16MultiArray, queue_size=10)
-rospy.init_node('controleThruster', anonymous=True)
+pub = rospy.Publisher('mapeadorThruster', UInt16MultiArray, queue_size=10)
+rospy.init_node('mapeadorThruster', anonymous=True)
 with Listener(on_press=on_press, on_release=on_release) as listener:
             listener.join()
-
-# def sla():
-#     global valor
-#     valor = UInt16MultiArray()
-#     valor.data = [1500, 1500, 1500, 1500, 1500, 1500]
-#     pub = rospy.Publisher('thruster', UInt16MultiArray, queue_size=10)
-#     rospy.init_node('controleThruster', anonymous=True)
-#     while not rospy.is_shutdown():
-#         pub.publish(valor)

@@ -39,7 +39,7 @@ def on_release(key):
 
 valor = UInt16MultiArray()
 valor.data = [1500, 1500, 1500, 1500, 1500, 1500]
-pub = rospy.Publisher('mapeadorThruster', UInt16MultiArray, queue_size=10)
-rospy.init_node('mapeadorThruster', anonymous=True)
+pub = rospy.Publisher('controleThruster', UInt16MultiArray, queue_size=10)
+rospy.init_node('controleThruster', anonymous=True)
 with Listener(on_press=on_press, on_release=on_release) as listener:
             listener.join()

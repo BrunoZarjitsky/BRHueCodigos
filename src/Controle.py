@@ -6,8 +6,8 @@ from Tkinter import *
 def controleThruster():
     valor = UInt16MultiArray()
     valor.data = [1500, 1500, 1500, 1500, 1500, 1500]
-    pub = rospy.Publisher('mapeadorThruster', UInt16MultiArray, queue_size=10)
-    rospy.init_node('mapeadorThruster', anonymous=True)
+    pub = rospy.Publisher('controleThruster', UInt16MultiArray, queue_size=10)
+    rospy.init_node('controleThruster', anonymous=True)
     while not rospy.is_shutdown():
         valor.data[0] = motor1.get()
         valor.data[1] = motor2.get()

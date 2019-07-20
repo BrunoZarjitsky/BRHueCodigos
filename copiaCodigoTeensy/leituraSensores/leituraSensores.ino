@@ -1,21 +1,16 @@
 #include <ros.h>
 #include <std_msgs/Float32.h>
+#include <std_msgs/Int16.h>
 #include <Wire.h>
 #include "MS5837.h"
 #include <Adafruit_BMP085.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_NeoMatrix.h>
-#include <Adafruit_NeoPixel.h>
+#include <Servo.h>
 #ifndef PSTR
  #define PSTR // Make Arduino Due happy
 #endif
 
 #define DISPLAY_PIN A7
-
-Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(32, 8, DISPLAY_PIN,
- NEO_MATRIX_TOP   + NEO_MATRIX_LEFT +
- NEO_MATRIX_COLUMNS + NEO_MATRIX_ZIGZAG,
- NEO_GRB      + NEO_KHZ800);
+#define SOSPIN 16
 
 Adafruit_BMP085 bmp180;
 
@@ -43,16 +38,38 @@ ros::Publisher leakS("leak", &leak);
 
 float sensores[7] = {0, 0, 0, 0, 0, 0, 0};
 
-#define SOSPIN A2
+Servo dropBolinha;
+
+int contr = 0;
+void bolinhaCB( const std_msgs::Int16& bolinha){
+  if (contr == 0){
+    dropBolinha.write(60);
+    digitalWrite(13, HIGH);
+    delay(100);
+    digitalWrite(13, LOW);
+    delay(100);
+    contr = 1;
+  }
+  else{
+    dropBolinha.write(0);
+    digitalWrite(13, HIGH);
+    delay(100);
+    digitalWrite(13, LOW);
+    delay(100);
+    contr = 0;
+  }
+}
+
+ros::Subscriber<std_msgs::Int16> Drop("dropBolinha", &bolinhaCB);
+
 void setup() {
+
+  pinMode(13, OUTPUT);
+  digitalWrite(13, HIGH);
 
   nh.getHardware()->setBaud(115200);
   
   Serial.begin(9600);
-  matrix.begin();
-  matrix.setTextWrap(false);
-  matrix.setBrightness(40);
-  matrix.setTextColor(matrix.Color(0,0,255));
   pinMode(SOSPIN, INPUT); // sets the digital pin 3 as input
 
 
@@ -80,6 +97,8 @@ void setup() {
   
   sensor.setModel(MS5837::MS5837_30BA);
   sensor.setFluidDensity(997); // kg/m^3 (freshwater, 1029 for seawater)
+
+  dropBolinha.attach(23);
   
   nh.initNode();
   nh.advertise(temp1);
@@ -89,6 +108,7 @@ void setup() {
   nh.advertise(deph1);
   nh.advertise(deph2);
   nh.advertise(leakS);
+  nh.subscribe(Drop);
 }
 
 void loop() {
@@ -96,20 +116,18 @@ void loop() {
   // Leak
   int leakState = digitalRead(SOSPIN); // read the input pin
   if (leakState == HIGH) { // prints “LEAK!” if input pin is high
-    Serial.println("LEAK!");
+    //Serial.println("LEAK!");
     sensores[6] = 1;
   }
   
   else if (leakState == LOW) { // prints “Dry” if input pin is low
-    Serial.println("Dry");
+    //Serial.println("Dry");
     sensores[6] = 0;
   }
   
   // Blue
   sensor.read();
-  matrix.print((sensor.pressure())); 
-  matrix.show();
-  Serial.print("Pressure: "); 
+  /*Serial.print("Pressure: "); 
   Serial.print(sensor.pressure()); 
   Serial.println(" mbar");
   Serial.print("Temperature: "); 
@@ -117,13 +135,13 @@ void loop() {
   Serial.println(" deg C");
   Serial.print("Depth: "); 
   Serial.print(sensor.depth()); 
-  Serial.println(" m");
+  Serial.println(" m");*/
   sensores[0] = sensor.pressure();
   sensores[1] = sensor.temperature();
   sensores[2] = sensor.depth();
 
   //bmp
-  Serial.print("Temperatura : ");
+  /*Serial.print("Temperatura : ");
   Serial.print(bmp180.readTemperature(),1);
   Serial.println(" C");
   Serial.print("Altitude : ");
@@ -131,10 +149,13 @@ void loop() {
   Serial.println(" m");
   Serial.print("Pressao : "); 
   Serial.print(bmp180.readPressure());  
-  Serial.println(" Pa");
+  Serial.println(" Pa");*/
   sensores[3] = bmp180.readTemperature();
   sensores[4] = bmp180.readAltitude();
-  sensores[5] = bmp180.readPressure();
+  sensores[5] = (bmp180.readPressure())/100;
+  /*Serial.println("\n");
+  Serial.println(sensores[1]);
+  Serial.println("\n");*/
 
   temperatura1.data = sensores[1];
   temperatura2.data = sensores[3];
@@ -153,6 +174,7 @@ void loop() {
   
   leak.data = sensores[6];
   leakS.publish( &leak);
+  
 
   nh.spinOnce();
 }

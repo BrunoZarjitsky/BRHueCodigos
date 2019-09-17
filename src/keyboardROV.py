@@ -3,8 +3,8 @@ from pynput.keyboard import Key, KeyCode, Listener
 import rospy
 from std_msgs.msg import UInt16MultiArray
 
-front = 1900
-back = 1100
+front = 1600
+back = 1400
 
 def on_press(key):
     #print(key)
